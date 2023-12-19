@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Great success!</title>
+        <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    </head>
+    <body>
+        <h1>Welcome aboard!</h1>
+        <p>
+            You've signed up as <b>{{ username }}</b>. Congratulations! The only way from here is up.
+            <br/>You should now be listed on the <a href="https://pcr.til.pm" target="_blank">main page</a> as a member.
+            If you aren't, or if you have other concerns, shoot a message to <a href="https://osu.ppy.sh/users/6233296">tilda</a>.
+        </p>
+        <hr/>
+        <div style="display: flex; flex-direction: column; align-items: center; padding-top: 1em;">
+            <a href="{{ url_for('root') }}"><button style="font-size: 1.5em;">View account settings</button></a>
+        </div>
+    </body>
+</html>
