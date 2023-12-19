@@ -1,6 +1,6 @@
-# `ameth`
-
 <img src="https://u.til.pm/2023/07/amesu.png" alt="Art of the character 'Ameth' from Princess Connect! Re:Dive" align="right"/>
+
+# `ameth`
 
 > emeth (adverb, Hebrew) - firmness, faithfulness, truth
 
