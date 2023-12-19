@@ -6,6 +6,8 @@
 
 Authentication/recruitment vessel for the [PriConne Mapping](https://pcr.til.pm) project.
 
+**Note: This service is not deployed into production yet as it's missing features.**
+
 ## Development
 
 You will need `poetry` to deal with dependencies. Running `poetry install` in the project folder should take care of everything.
