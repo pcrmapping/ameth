@@ -1,7 +1,17 @@
-from flask import Flask, render_template, session, url_for
+from flask import Flask, render_template, session, url_for, redirect
 from authlib.integrations.flask_client import OAuth
 from flask.cli import load_dotenv
 from os import environ
+import peewee
+from playhouse.flask_utils import FlaskDB
+
+orm = FlaskDB(
+    database='sqlite:///ameth.db',
+    excluded_routes=('auth_consent'))
+
+class Member(orm.Model):
+    id = peewee.IntegerField(primary_key=True)
+    username = peewee.TextField()
 
 oauth = OAuth()
 
@@ -10,6 +20,10 @@ def create_app():
     assert load_dotenv()
     
     app.secret_key = environ['AMETH_SECRET_KEY']
+    
+    orm.init_app(app)
+    with orm.database:
+        orm.database.create_tables([Member])
     
     oauth.init_app(app)
     oauth.register(
@@ -24,6 +38,7 @@ def create_app():
     return app
 
 app = create_app()
+db = orm.database
 
 @app.route('/')
 def root():
@@ -43,12 +58,20 @@ def auth_process():
     response = oauth.osu.get('me', token=token)
     response.raise_for_status()
     me = response.json()
-
-    session['osu'] = {
-        'username': me['username'],
-        'id': me['id']
-    }
     
-    return render_template('success.html', 
-                            username=session['osu']['username'])
+    with db.atomic():
+        session['osu'] = {
+            'username': me['username'],
+            'id': me['id']
+        }
+        
+        if Member.get_or_none(Member.id == session['osu']['id']):
+            return redirect(url_for('root')) # will render account dash if a session is active
+        else:
+            Member.create(
+                id=session['osu']['id'],
+                username=session['osu']['username']
+            )
+            return render_template('success.html', 
+                                    username=session['osu']['username'])
 
