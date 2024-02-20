@@ -4,14 +4,16 @@ from flask.cli import load_dotenv
 from os import environ
 import peewee
 from playhouse.flask_utils import FlaskDB
+from utils.dict import DictField
 
 orm = FlaskDB(
     database='sqlite:///ameth.db',
-    excluded_routes=('auth_consent'))
+    excluded_routes=('auth_consent',))
 
 class Member(orm.Model):
     id = peewee.IntegerField(primary_key=True)
     username = peewee.TextField()
+    roles = DictField()
 
 oauth = OAuth()
 
@@ -42,10 +44,14 @@ db = orm.database
 
 @app.route('/')
 def root():
+    return render_template('index.html')
+
+@app.route('/join')
+def join():
     if session.get('osu'):
         return render_template('manage.html', username=session['osu']['username'])
     else:
-        return render_template('welcome.html')
+        return render_template('auth.html')
 
 @app.route('/consent')
 def auth_consent():
